@@ -12,7 +12,7 @@ A one-page marketing site for Rosa Cleans, an independent house cleaner in East 
 | `styles.css` | All styling, loaded via `<link>` in `<head>` |
 | `script.js` | One IIFE — email de-obfuscation + contact-form submit — loaded via `<script src>` before `</body>` |
 
-A fourth file, `.github/workflows/jekyll-gh-pages.yml`, builds and deploys the site to GitHub Pages on every push to `main`. See "Jekyll / GitHub Pages" below.
+Two support files sit alongside them: `.github/workflows/jekyll-gh-pages.yml`, which builds and deploys the site to GitHub Pages on every push to `main`, and `_config.yml`, which keeps the Markdown docs out of that build. See "Jekyll / GitHub Pages" below.
 
 `script.js` runs at the end of `<body>` and queries the DOM immediately, so it has no `defer`/`DOMContentLoaded` guard. If you move the tag into `<head>`, add `defer`.
 
@@ -29,10 +29,12 @@ A fourth file, `.github/workflows/jekyll-gh-pages.yml`, builds and deploys the s
 
 Jekyll is a pass-through here, not a templating layer:
 
-- There is no `_config.yml`, `Gemfile`, `_layouts`, or `_includes`, and no file has YAML front matter.
+- There is no `Gemfile`, `_layouts`, or `_includes`, and no file has YAML front matter. `_config.yml` exists but only sets `exclude`.
 - Because the files have no front matter, Jekyll treats them as static files and copies them verbatim — no Liquid rendering. The built `_site` is byte-identical to the source, so `python3 -m http.server` still matches production exactly.
-- Keep it that way unless there's a reason not to. Adding front matter to `index.html` would switch it into Liquid rendering, and `{{ … }}` / `{% … %}` in the markup (currently none) would then be interpreted. If templating is ever wanted, add `_config.yml` and layouts deliberately and update these docs.
-- Jekyll skips paths starting with `_` or `.` (plus `LICENSE`, `README.md`, `CLAUDE.md`), so don't name a shipped asset with a leading underscore. If Jekyll processing ever needs to be turned off entirely, add an empty `.nojekyll` at the root.
+- Keep it that way unless there's a reason not to. Adding front matter to `index.html` would switch it into Liquid rendering, and `{{ … }}` / `{% … %}` in the markup (currently none) would then be interpreted. If templating is ever wanted, add layouts deliberately and update these docs.
+- Jekyll skips paths starting with `_` or `.`, so don't name a shipped asset with a leading underscore. It does **not** skip Markdown docs on its own: GitHub Pages enables `jekyll-optional-front-matter`, which runs every `.md` file through Liquid, so a literal `{%` or `{{` in `CLAUDE.md` or `README.md` fails the build with a `Liquid::SyntaxError`. That's why `_config.yml` lists them under `exclude` — add any new Markdown doc there too (or wrap its Liquid examples in `{% raw %}`).
+- The build log's faraday-retry gem notice is a harmless warning from the GitHub Pages image, not a failure.
+- If Jekyll processing ever needs to be turned off entirely, add an empty `.nojekyll` at the root.
 
 ## Conventions to preserve when editing
 

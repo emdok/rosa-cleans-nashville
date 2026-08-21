@@ -1,0 +1,8 @@
+# Jekyll is a pass-through for this site: no layouts, no front matter, no Liquid.
+# This config exists only to keep the internal Markdown docs out of the build.
+# GitHub Pages enables jekyll-optional-front-matter, which would otherwise run
+# every .md file through Liquid — and these docs contain literal {%/{{ examples.
+exclude:
+  - CLAUDE.md
+  - README.md
+  - LICENSE
