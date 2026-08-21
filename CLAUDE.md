@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A one-page marketing site for Rosa Cleans, an independent house cleaner in East Nashville. Three static files, no build step, no dependencies, no package manager:
+A one-page marketing site for Rosa Cleans, an independent house cleaner in East Nashville. Three static files, no dependencies, no package manager:
 
 | File | Contents |
 | --- | --- |
@@ -12,14 +12,27 @@ A one-page marketing site for Rosa Cleans, an independent house cleaner in East 
 | `styles.css` | All styling, loaded via `<link>` in `<head>` |
 | `script.js` | One IIFE — email de-obfuscation + contact-form submit — loaded via `<script src>` before `</body>` |
 
+A fourth file, `.github/workflows/jekyll-gh-pages.yml`, builds and deploys the site to GitHub Pages on every push to `main`. See "Jekyll / GitHub Pages" below.
+
 `script.js` runs at the end of `<body>` and queries the DOM immediately, so it has no `defer`/`DOMContentLoaded` guard. If you move the tag into `<head>`, add `defer`.
 
 ## Working on it
 
 - Preview: run `python3 -m http.server` from the repo root and open the printed URL. Opening `index.html` as a `file://` URL works too, but serving it matches production.
-- Deploy by uploading all three files to any static host; there is nothing to build.
-- There is no build, lint, or test tooling. Do not add a bundler or framework unless explicitly asked — plain static files are deliberate.
+- Pushing to `main` deploys via the GitHub Pages workflow. The three files can also be uploaded to any static host as-is; there is nothing to compile.
+- There is no lint or test tooling, and no local build step. Do not add a bundler or framework unless explicitly asked — plain static files are deliberate.
 - The only external network dependencies are the Google Fonts stylesheet (Open Sans) and the Web3Forms API. Favicon and the select-chevron are inline SVG data URIs.
+
+## Jekyll / GitHub Pages
+
+`.github/workflows/jekyll-gh-pages.yml` (the stock GitHub template) runs `actions/jekyll-build-pages` over the repo root on pushes to `main` and manual `workflow_dispatch`, then deploys `_site` to Pages. Concurrency group `pages`, in-progress runs are not cancelled.
+
+Jekyll is a pass-through here, not a templating layer:
+
+- There is no `_config.yml`, `Gemfile`, `_layouts`, or `_includes`, and no file has YAML front matter.
+- Because the files have no front matter, Jekyll treats them as static files and copies them verbatim — no Liquid rendering. The built `_site` is byte-identical to the source, so `python3 -m http.server` still matches production exactly.
+- Keep it that way unless there's a reason not to. Adding front matter to `index.html` would switch it into Liquid rendering, and `{{ … }}` / `{% … %}` in the markup (currently none) would then be interpreted. If templating is ever wanted, add `_config.yml` and layouts deliberately and update these docs.
+- Jekyll skips paths starting with `_` or `.` (plus `LICENSE`, `README.md`, `CLAUDE.md`), so don't name a shipped asset with a leading underscore. If Jekyll processing ever needs to be turned off entirely, add an empty `.nojekyll` at the root.
 
 ## Conventions to preserve when editing
 

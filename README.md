@@ -2,13 +2,14 @@
 
 A one-page marketing site for **Rosa Cleans**, an independent house cleaner serving East Nashville and surrounding areas.
 
-Three static files. No build step, no dependencies, no package manager.
+Three static files. No dependencies, no package manager, nothing to compile. A GitHub Actions workflow builds and deploys it to GitHub Pages via Jekyll.
 
 | File | Contents |
 | --- | --- |
 | `index.html` | All markup, plus the `LocalBusiness` JSON-LD block |
 | `styles.css` | All styling (design tokens live in `:root` at the top) |
 | `script.js` | One IIFE — email de-obfuscation + contact-form submit |
+| `.github/workflows/jekyll-gh-pages.yml` | Builds with Jekyll and deploys to GitHub Pages on push to `main` |
 
 ## Sections
 
@@ -27,7 +28,11 @@ Then open the printed URL. Opening `index.html` as a `file://` URL also works, b
 
 ## Deploying
 
-Upload `index.html`, `styles.css`, and `script.js` to any static host (Netlify, Cloudflare Pages, GitHub Pages, S3, plain nginx). There is nothing to build.
+**GitHub Pages (current setup).** Pushing to `main` triggers `.github/workflows/jekyll-gh-pages.yml`, which builds the repo root with `actions/jekyll-build-pages` and deploys the result to Pages. It can also be run by hand from the Actions tab. Enabling this on a fresh fork needs *Settings → Pages → Source: GitHub Actions*.
+
+Jekyll here is a pass-through, not a templating layer: there is no `_config.yml`, `Gemfile`, or layouts, and no file has YAML front matter — so Jekyll copies all three files verbatim. The built site is identical to the source, which is why local preview matches production.
+
+**Anywhere else.** Upload `index.html`, `styles.css`, and `script.js` to any static host (Netlify, Cloudflare Pages, S3, plain nginx). The workflow file is inert outside GitHub.
 
 ## ⚠️ Before it goes live
 
@@ -44,6 +49,7 @@ The endpoint URL is duplicated in two places — the `action` attribute on the `
 - **Email obfuscation** — the address is never written literally in the markup. The page shows `…nashville [at] gmail.com`; `script.js` assembles the real address at runtime and rewrites every `a.js-email` (`href` + text). New email links need `class="js-email"` and the same placeholder pattern. The only plain-text copies are the JSON-LD block (for search engines) and `script.js` itself (split across `u`/`d`).
 - **JSON-LD** — the `LocalBusiness` block at the bottom of `index.html` mirrors the page's services, description, and contact details. Update it whenever those change.
 - **Script placement** — `script.js` loads at the end of `<body>` and queries the DOM immediately, so it has no `defer`/`DOMContentLoaded` guard. If you move the tag into `<head>`, add `defer`.
+- **Jekyll** — adding YAML front matter to a file switches it into Liquid rendering, so `{{ … }}` and `{% … %}` in that file would start being interpreted (there are none today). Jekyll also skips paths beginning with `_` or `.`, so don't name a shipped asset that way. To disable Jekyll processing entirely, add an empty `.nojekyll` at the root.
 - Plain static files are deliberate. Don't add a bundler or framework.
 
 ## External dependencies
