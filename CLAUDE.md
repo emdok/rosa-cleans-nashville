@@ -4,13 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A one-page marketing site for Rosa Cleans, an independent house cleaner in East Nashville. Three static files, no dependencies, no package manager:
+A one-page marketing site for Rosa Cleans, an independent house cleaner in East Nashville. Four static files, no dependencies, no package manager:
 
 | File | Contents |
 | --- | --- |
 | `index.html` | Markup only, plus the `LocalBusiness` JSON-LD block |
 | `styles.css` | All styling, loaded via `<link>` in `<head>` |
 | `script.js` | One IIFE — email de-obfuscation + contact-form submit — loaded via `<script src>` before `</body>` |
+| `favicon.svg` | Site favicon: sage rounded square with the cream cleaning-caddy mark, referenced by `<link rel="icon">` |
 
 Two support files sit alongside them: `.github/workflows/jekyll-gh-pages.yml`, which builds and deploys the site to GitHub Pages on every push to `main`, and `_config.yml`, which keeps the Markdown docs out of that build. See "Jekyll / GitHub Pages" below.
 
@@ -19,9 +20,9 @@ Two support files sit alongside them: `.github/workflows/jekyll-gh-pages.yml`, w
 ## Working on it
 
 - Preview: run `python3 -m http.server` from the repo root and open the printed URL. Opening `index.html` as a `file://` URL works too, but serving it matches production.
-- Pushing to `main` deploys via the GitHub Pages workflow. The three files can also be uploaded to any static host as-is; there is nothing to compile.
+- Pushing to `main` deploys via the GitHub Pages workflow. The files can also be uploaded to any static host as-is; there is nothing to compile.
 - There is no lint or test tooling, and no local build step. Do not add a bundler or framework unless explicitly asked — plain static files are deliberate.
-- The only external network dependencies are the Google Fonts stylesheet (Open Sans) and the Web3Forms API. Favicon and the select-chevron are inline SVG data URIs.
+- The only external network dependencies are the Google Fonts stylesheet (Open Sans) and the Web3Forms API. The favicon is `favicon.svg` at the repo root; the select-chevron is an inline SVG data URI.
 
 ## Jekyll / GitHub Pages
 

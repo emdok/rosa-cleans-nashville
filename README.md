@@ -54,7 +54,7 @@ The endpoint URL is duplicated in two places — the `action` attribute on the `
 
 ## External dependencies
 
-Only two, both loaded at runtime: the Google Fonts stylesheet (Open Sans) and the Web3Forms API. The favicon and select chevron are inline SVG data URIs.
+Only two, both loaded at runtime: the Google Fonts stylesheet (Open Sans) and the Web3Forms API. The favicon is `favicon.svg` at the repo root; the select chevron is an inline SVG data URI.
 
 ## License
 
