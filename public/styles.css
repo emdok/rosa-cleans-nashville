@@ -137,6 +137,7 @@ thead th{
 }
 tbody tr:last-child td{border-bottom:none}
 td.price{font-weight:600;white-space:nowrap}
+.pricing-note{margin:0 0 24px;font-size:.95rem;color:var(--ink)}
 .price-notes{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .note{
   background:var(--card);border:1px solid var(--line);
